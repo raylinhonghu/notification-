@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Fake Data: change this time to test different working hours
-var WorkTime = 16; 
+var WorkTime = 16;
 
 // current time
 var date = new Date();
@@ -57,10 +57,11 @@ if((WorkTime-current_hour)==1){
 io.on('connection',function(socket){
   console.log('connection is made with id : ', socket.id);
 
-  // check every 60mins for sending notification
+  // check every 60mins to send notification
   setInterval(()=>{
     if((WorkTime-current_hour)==1){
-      OnehourLeftNotification();
+      // sending to particular user
+      socket.broadcast.to(socket.id).emit('shiftWarning', "One hour from next work shift");
     }
   }, 3600000);
 })
